@@ -9,6 +9,7 @@ import (
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 
+	"github.com/rbgayoivoye09/ssh-pcap/src/util/flag"
 	. "github.com/rbgayoivoye09/ssh-pcap/src/util/log"
 )
 
@@ -44,14 +45,12 @@ func ExecuteRemoteCommand(host, port, user, password, cmd_type string, command [
 	commandStr := ""
 	for _, v := range command {
 		commandStr += v + " ; "
-		Logger.Sugar().Infof("command: %v", v)
 	}
 	commandStr = commandStr[:len(commandStr)-1]
 
 	Logger.Sugar().Infof("commandStr: %v", commandStr)
-	fmt.Printf("commandStr: %v\n", commandStr)
 
-	if cmd_type == "download" {
+	if cmd_type == flag.DOWN_FLAG {
 		err = session.Run(commandStr)
 		if err != nil {
 			return "", err
@@ -59,7 +58,7 @@ func ExecuteRemoteCommand(host, port, user, password, cmd_type string, command [
 			// 打开SFTP会话
 			sftpClient, err := sftp.NewClient(client)
 			if err != nil {
-				fmt.Println("Failed to create sftp client: ", err)
+				Logger.Sugar().Infof("Failed to create sftp client: ", err)
 				return "", err
 			}
 			defer sftpClient.Close()
@@ -70,7 +69,7 @@ func ExecuteRemoteCommand(host, port, user, password, cmd_type string, command [
 			// 列出远程目录下的所有文件
 			files, err := sftpClient.ReadDir(remoteDir)
 			if err != nil {
-				fmt.Println("Failed to read directory: ", err)
+				Logger.Sugar().Infof("Failed to read directory: ", err)
 				return "", err
 			}
 
@@ -91,22 +90,28 @@ func ExecuteRemoteCommand(host, port, user, password, cmd_type string, command [
 				fmt.Printf("localFilePath: %v\n", localFilePath)
 				err = downloadFile(sftpClient, remoteFilePath, localFilePath)
 				if err != nil {
-					fmt.Println("Failed to download file: ", err)
+					Logger.Sugar().Infof("Failed to download file: ", err)
 					return "", err
 				}
 
-				fmt.Println("File downloaded successfully:", localFilePath)
+				Logger.Sugar().Infof("File downloaded successfully:", localFilePath)
 			} else {
-				fmt.Println("No files found in the remote directory.")
+				Logger.Sugar().Infof("No files found in the remote directory.")
 			}
 
 		}
+	} else if cmd_type == flag.SHOW_FLAG {
+
+		err = session.Run(commandStr)
+		if err != nil {
+			return "", err
+		}
+
 	} else {
 		err = session.Start(commandStr)
 		if err != nil {
 			return "", err
 		}
-		Logger.Sugar().Infof("command: %v", command[0])
 
 	}
 	return stdoutBuf.String(), nil
