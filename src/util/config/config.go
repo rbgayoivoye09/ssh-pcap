@@ -6,20 +6,20 @@ import (
 
 	"github.com/spf13/viper"
 
-	. "github.com/rbgayoivoye09/ssh-pcap/util/log"
+	. "github.com/rbgayoivoye09/ssh-pcap/src/util/log"
 )
 
 type Config struct {
-	SSHConfig     map[string]SSHConfig `yaml:"ssh-config"`
-	LocalFilePath string               `yaml:"local-file-path"`
+	LocalFilePath string                     `yaml:"local-file-path" mapstructure:"local-file-path"`
+	SSHConfig     map[string]SSHServerConfig `yaml:"ssh-config" mapstructure:"ssh-config"`
 }
 
-type SSHConfig struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	Username string `yaml:"uername"`
-	Password string `yaml:"password"`
-	PcapCmd  string `yaml:"pcapCmd"`
+type SSHServerConfig struct {
+	Host     string `yaml:"host" mapstructure:"host"`
+	Port     string `yaml:"port" mapstructure:"port"`
+	Username string `yaml:"username" mapstructure:"username"`
+	Password string `yaml:"password" mapstructure:"password"`
+	PcapCmd  string `yaml:"pcapCmd" mapstructure:"pcapCmd"`
 }
 
 // newConfig creates a new instance of Config using the provided config file path.
@@ -74,8 +74,10 @@ func getDefaultConfigFilePath() string {
 	if err != nil {
 		// Log and exit if there is an error getting the project root path.
 		Logger.Sugar().Fatalf("Error getting project root path: %v", err)
+	} else {
+		Logger.Sugar().Infof("project root: %s", projectRoot)
 	}
 	// Construct the path to the config file.
-	configFilePath := filepath.Join(projectRoot, "config", "user.yml")
+	configFilePath := filepath.Join(projectRoot, "config", "base.yaml")
 	return configFilePath
 }

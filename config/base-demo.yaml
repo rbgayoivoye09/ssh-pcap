@@ -1,14 +1,14 @@
-local-file-path : ""
+local-file-path : "aaaa"
 ssh-config:
   server1: 
-   host: ""
-   port: ""
-   uername: ""
-   password : ""
-   pcapCmd : ""
-  server2:
-   host: ""
-   port: ""
-   uername: ""
-   password : ""
-   pcapCmd : ""
+   host: "127.0.0.1"
+   port: "22"
+   uername: "root"
+   password : "123456"
+   pcapCmd : "pwd"
+  # server2:
+  #  host: ""
+  #  port: ""
+  #  uername: ""
+  #  password : ""
+  #  pcapCmd : ""
