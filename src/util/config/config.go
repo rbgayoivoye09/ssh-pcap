@@ -19,7 +19,9 @@ type SSHServerConfig struct {
 	Port     string `yaml:"port" mapstructure:"port"`
 	Username string `yaml:"username" mapstructure:"username"`
 	Password string `yaml:"password" mapstructure:"password"`
-	PcapCmd  string `yaml:"pcapCmd" mapstructure:"pcapCmd"`
+	PcapCmd  []string `yaml:"pcapCmd" mapstructure:"pcapCmd"`
+	StopCmd  []string `yaml:"stopCmd" mapstructure:"stopCmd"`
+	DownCmd  []string `yaml:"downCmd" mapstructure:"downCmd"`
 }
 
 // newConfig creates a new instance of Config using the provided config file path.
