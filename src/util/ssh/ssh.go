@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 
 	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
@@ -73,14 +74,22 @@ func ExecuteRemoteCommand(host, port, user, password, cmd_type string, command [
 				return "", err
 			}
 
+			// 筛选出以 .tar.gz 结尾的文件
+			var tarFiles []os.FileInfo
+			for _, file := range files {
+				if strings.HasSuffix(file.Name(), ".tar.gz") {
+					tarFiles = append(tarFiles, file)
+				}
+			}
+
 			// 按修改时间对文件排序
-			sort.Slice(files, func(i, j int) bool {
-				return files[i].ModTime().After(files[j].ModTime())
+			sort.Slice(tarFiles, func(i, j int) bool {
+				return tarFiles[i].ModTime().After(tarFiles[j].ModTime())
 			})
 
-			// 获取最新的文件
-			if len(files) > 0 {
-				latestFile := files[0]
+			// 获取最新的 .tar.gz 文件
+			if len(tarFiles) > 0 {
+				latestFile := tarFiles[0]
 				fmt.Printf("latestFile: %v\n", latestFile)
 				remoteFilePath := fmt.Sprintf("%s%s", remoteDir, latestFile.Name())
 				fmt.Printf("remoteFilePath: %v\n", remoteFilePath)

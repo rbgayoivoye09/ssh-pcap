@@ -29,3 +29,6 @@ config/stop.yaml
 config/pcap.yaml
 config/down.yaml
 *.gz
+pcap*/
+bin/
+config/ercai.yaml
