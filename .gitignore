@@ -25,10 +25,7 @@ config/base.yaml
 .idea/
 logs/
 *test.go
-config/stop.yaml
-config/pcap.yaml
-config/down.yaml
+config/test*.yaml
 *.gz
 pcap*/
 bin/
-config/ercai.yaml
