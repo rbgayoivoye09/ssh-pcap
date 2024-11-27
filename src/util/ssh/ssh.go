@@ -80,6 +80,9 @@ func ExecuteRemoteCommand(host, port, user, password, cmd_type string, command [
 				if strings.HasSuffix(file.Name(), ".tar.gz") {
 					tarFiles = append(tarFiles, file)
 				}
+				if strings.HasSuffix(file.Name(), ".gz") {
+					tarFiles = append(tarFiles, file)
+				}
 			}
 
 			// 按修改时间对文件排序
